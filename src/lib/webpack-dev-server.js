@@ -3,6 +3,7 @@ import WebpackDevServer from 'webpack-dev-server';
 import webpackConfigBuilder from './webpack-config-dev';
 import _chalk from 'chalk';
 
+import createDashboard from './webpack-dashboard';
 import { isLikelyASyntaxError, formatMessage } from './webpack-error-helpers';
 
 import {
@@ -74,8 +75,7 @@ export function onDone(imports, flags, ngrokUrl, stats) {
 export function createWebpackCompiler(config, flags, ngrokUrl) {
   const compiler = webpack(config);
   const imports = { log: console.log.bind(console), chalk: _chalk }; // eslint-disable-line
-  compiler.plugin('invalid', devServerInvalidBuildMsg.bind(null, imports));
-  compiler.plugin('done', onDone.bind(null, imports, flags, ngrokUrl));
+  compiler.apply(createDashboard(flags, ngrokUrl));
   return compiler;
 }
 
