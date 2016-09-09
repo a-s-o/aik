@@ -70,9 +70,7 @@ export function devServerBanner({ chalk }, flags, entry, ngrokUrl) {
 
 export function devServerInvalidBuildMsg({ log, chalk }) {
   clearConsole({ chalk });
-  return print({ log }, [
-    chalk.yellow('Compiling...')
-  ]);
+  return print({ log }, [chalk.yellow('Compiling...')]);
 }
 
 export function devServerCompiledSuccessfullyMsg({ log, chalk }, flags, entry, ngrokUrl) {
@@ -99,7 +97,7 @@ export function devServerCompiledWithWarningsMsg({ log, chalk }, flags, entry, n
  *
  */
 
-export function builderBanner({ log, chalk }, entry, flags) {
+export function builderBanner({ log, chalk }, flags, entry) {
   clearConsole({ chalk });
 
   const msg = [
@@ -132,6 +130,7 @@ export function builderRunningBuildMsg({ log, chalk }) {
 
 export function builderErrorMsg({ log, chalk }, err) {
   let msg = err.message || err;
+
   if (isLikelyASyntaxError(msg)) {
     msg = formatMessage(msg);
   }

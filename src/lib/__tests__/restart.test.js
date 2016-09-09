@@ -1,7 +1,5 @@
-import test from 'ava';
 import identity from 'lodash/identity';
-
-import restart from '../src/lib/restart';
+import restart from '../restart';
 
 const chalk = {
   yellow: identity,
@@ -17,7 +15,7 @@ const prc = {
   }
 };
 
-test.cb('restart -> should call server.invalidate if rs in stdin', (t) => {
+test('should call server.invalidate if rs in stdin', done => {
   prc.stdin.read = () => 'rs';
   prc.stdin.on = (event, cb) => cb();
 
@@ -26,20 +24,20 @@ test.cb('restart -> should call server.invalidate if rs in stdin', (t) => {
     chalk,
     server: {
       invalidate() {
-        t.end();
+        done();
       }
     }
   });
 });
 
-test.cb('restart -> should not call server.invalidate if something else in stdin', (t) => {
+test('should not call server.invalidate if something else in stdin', done => {
   let invalidate = false;
 
   prc.stdin.read = () => '';
   prc.stdin.on = (event, cb) => {
     cb();
-    t.false(invalidate);
-    t.end();
+    expect(invalidate).not.toBe(true);
+    done();
   };
 
   restart({
